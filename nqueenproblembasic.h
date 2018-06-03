@@ -11,6 +11,7 @@ class NQueenProblemBasic
 {
 public:
     explicit NQueenProblemBasic(int n = 8);
+    ~NQueenProblemBasic();
 
     void initializeBoard();
     int getCountQueen() const;
@@ -38,6 +39,13 @@ public:
 protected:
     void findSolutionBoardRecursive(int y);
     void findSolutionArrayRecursive(int y);
+    /**
+     * @brief findSolutionBitRecursive
+     * @param row: columns of all queens already on the board
+     * @param ld: back diagonal (right top to left bottom)
+     * @param rd: diagonal (left top to right bottom)
+     */
+    void findSolutionBitRecursive(int row, int ld, int rd);
 
 private:
     int countQueen;
@@ -74,6 +82,7 @@ private:
 
 
     int solutionCountBit;
+    int upperLimit;
 };
 
 #endif // NQUEENPROBLEMBASIC_H

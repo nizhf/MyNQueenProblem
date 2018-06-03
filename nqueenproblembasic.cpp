@@ -9,11 +9,17 @@ NQueenProblemBasic::NQueenProblemBasic(int n) : countQueen(n) {
         board.push_back(0);
     }
     queenArray = unique_ptr<int[]>(new int[countQueen]);
-    queenArrayIter = unique_ptr<int[]>(new int[countQueen]);
+    queenArrayIter = unique_ptr<int[]>(new int[countQueen + 2]);
     for (int i = 0; i < countQueen; i++) {
         queenArray[i] = -100;
+    }
+    for (int i = 0; i < countQueen + 2; i++) {
         queenArrayIter[i] = -100;
     }
+    upperLimit = (1 << countQueen) - 1;
+}
+
+NQueenProblemBasic::~NQueenProblemBasic() {
 
 }
 
@@ -23,11 +29,14 @@ void NQueenProblemBasic::initializeBoard() {
         board.push_back(0);
     }
     queenArray = unique_ptr<int[]>(new int[countQueen]);
-    queenArrayIter = unique_ptr<int[]>(new int[countQueen]);
+    queenArrayIter = unique_ptr<int[]>(new int[countQueen + 2]);
     for (int i = 0; i < countQueen; i++) {
         queenArray[i] = -100;
+    }
+    for (int i = 0; i < countQueen + 2; i++) {
         queenArrayIter[i] = -100;
     }
+    upperLimit = (1 << countQueen) - 1;
 }
 
 int NQueenProblemBasic::getCountQueen() const {
@@ -210,85 +219,105 @@ void NQueenProblemBasic::findSolutionArrayRecursive(int y) {
 
 void NQueenProblemBasic::findSolutionArrayIter() {
     solutionCountArrayIter = 0;
-//    int y = 0, x = 0;
-//    while (y < countQueen) {
-//        while (x < countQueen) {
-//            //valid position for queen?
-//            bool valid = true;
-//            for (int i = 0; i < y; i++) {
-//                if (x == queenArrayIter[i] || (x - queenArrayIter[i]) == y - i || (x - queenArrayIter[i]) == i - y) {
-//                    valid = false;
-//                    break;
-//                }
-//            }
-//
-//            //if valid, goto next row
-//            if (valid) {
-//                queenArrayIter[y] = x;
-//                x = 0;
-//                break;
-//            }
-//            //if invalid, goto next column
-//            else {
-//                x++;
-//            }
-//        }
-//        //no valid position found at this row
-//        if (queenArrayIter[y] < 0) {
-//            //search completed
-//            if (y <= 0) {
-//                break;
-//            }
-//            //goto the last row, set queen in the next column
-//            else {
-//                y--;
-//                x = queenArrayIter[y] + 1;
-//                queenArrayIter[y] = -100;
-//                continue;
-//            }
-//        }
-//        //reach the last row, solution found, set queen in the next column
-//        if (y == countQueen - 1) {
-//            solutionCountArrayIter++;
-//            x = queenArrayIter[y] + 1;
-//            queenArrayIter[y] = -100;
-//            continue;
-//        }
-//        y++;
-//    }
 
-    int y = 0;
-    queenArrayIter[y] = 0;
-    while (y >= 0) {
-        if (y < countQueen && queenArrayIter[y] < countQueen) {
+    int y = 0, x = 0;
+    while (y < countQueen) {
+        while (x < countQueen) {
             //valid position for queen?
             bool valid = true;
             for (int i = 0; i < y; i++) {
-                if (queenArrayIter[y] == queenArrayIter[i] || (queenArrayIter[y] - queenArrayIter[i]) == y - i || (queenArrayIter[y] - queenArrayIter[i]) == i - y) {
+                if (x == queenArrayIter[i] || (x - queenArrayIter[i]) == y - i || (x - queenArrayIter[i]) == i - y) {
                     valid = false;
                     break;
                 }
             }
+
+            //if valid, goto next row
             if (valid) {
-                y++;
-                queenArrayIter[y] = 0;
+                queenArrayIter[y] = x;
+                x = 0;
+                break;
             }
+            //if invalid, goto next column
             else {
-                queenArrayIter[y]++;
+                x++;
             }
         }
-        else {
-            if (y >= countQueen) {
-                solutionCountArrayIter++;
+        //no valid position found at this row
+        if (queenArrayIter[y] < 0) {
+            //search completed
+            if (y <= 0) {
+                break;
             }
-            y--;
-            queenArrayIter[y]++;
+            //goto the last row, set queen in the next column
+            else {
+                y--;
+                x = queenArrayIter[y] + 1;
+                queenArrayIter[y] = -100;
+                continue;
+            }
         }
+        //reach the last row, solution found, set queen in the next column
+        if (y == countQueen - 1) {
+            solutionCountArrayIter++;
+            x = queenArrayIter[y] + 1;
+            queenArrayIter[y] = -100;
+            continue;
+        }
+        y++;
     }
+
+//    int y = 1;
+//    queenArrayIter[y] = 0;
+//    while (y > 0) {
+//        if (y <= countQueen && queenArrayIter[y] < countQueen) {
+//            //valid position for queen?
+//            bool valid = true;
+//            for (int i = 1; i < y; i++) {
+//                if (queenArrayIter[y] == queenArrayIter[i] || queenArrayIter[y] - queenArrayIter[i] == y - i || queenArrayIter[y] - queenArrayIter[i] == i - y) {
+//                    valid = false;
+//                    break;
+//                }
+//            }
+//            if (valid) {
+//                y++;
+//                queenArrayIter[y] = 0;
+//            }
+//            else {
+//                queenArrayIter[y]++;
+//            }
+//        }
+//        else {
+//            if (y > countQueen) {
+//                solutionCountArrayIter++;
+//            }
+//            y--;
+//            queenArrayIter[y]++;
+//        }
+//    }
 }
 
 void NQueenProblemBasic::findSolutionBit() {
     solutionCountBit = 0;
+    findSolutionBitRecursive(0, 0, 0);
+}
+
+void NQueenProblemBasic::findSolutionBitRecursive(int row, int ld, int rd) {
+    int pos, p;
+    if (row != upperLimit) {
+        //get all available positions
+        pos = upperLimit & ~(row | ld | rd);
+        while (pos != 0) {
+            //get the position at right
+            p = pos & (~pos + 1);
+            //remove this position from available positions
+            pos -= p;
+            findSolutionBitRecursive(row | p, ((ld | p) << 1) & upperLimit, ((rd | p) >> 1) & upperLimit);
+        }
+    }
+    else {
+        solutionCountBit++;
+    }
 }
 
 
