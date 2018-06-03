@@ -2,6 +2,7 @@
 #define NQUEENPROBLEMBASIC_H
 
 #include <vector>
+#include <memory>
 #include <iostream>
 
 using namespace std;
@@ -14,24 +15,34 @@ public:
     void initializeBoard();
     int getCountQueen() const;
     void setCountQueen(int value);
-    int getSolutionCount() const;
+    int getSolutionCountBoard() const;
+    int getSolutionCountArray() const;
+    int getSolutionCountArrayIter() const;
+    int getSolutionCountBit() const;
     void printBoard(ostream &os = cout);
 
     void setInvalid(int x, int y);
     bool setQueen(int x, int y);
     bool removeQueen(int x, int y);
 
-    void findSolution();
+    void findSolutionBoard();
+
+    void findSolutionArray();
+
+    void findSolutionArrayIter();
+
+    void findSolutionBit();
 
     friend ostream &operator<<(ostream &os, NQueenProblemBasic &npb);
 
 protected:
-    void findSolutionRecursive(int y);
+    void findSolutionBoardRecursive(int y);
+    void findSolutionArrayRecursive(int y);
 
 private:
     int countQueen;
-    int solutionCount;
 
+    int solutionCountBoard;
     /* board
      *
      * y7 56 57 58 59 60 61 62 63
@@ -51,6 +62,18 @@ private:
      */
     vector<char> board;
 
+    int solutionCountArray;
+    /* Array
+     * -1 - no queen at this row
+     * 0 ~ countQueen-1 - queen at this row at column
+     */
+    unique_ptr<int[]> queenArray;
+
+    int solutionCountArrayIter;
+    unique_ptr<int[]> queenArrayIter;
+
+
+    int solutionCountBit;
 };
 
 #endif // NQUEENPROBLEMBASIC_H
